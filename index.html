@@ -362,7 +362,9 @@ function openArticleById(id){
       viewed = viewed.filter(x=>x!==a.id); viewed.unshift(a.id); if(viewed.length>5) viewed.pop(); saveState(); renderHistory(); renderFavs(); renderList();
       favToggle.textContent = favs.includes(a.id)? '★' : '☆';
       updateCounts();
-    }
+    // ДОБАВЬ ЭТУ СТРОЧКУ В САМЫЙ КОНЕЦ:
+  addCopyLinkButton();
+}
 
     function openNext(){ if(currentIndex===null) return; const next = Math.min(articles.length-1,currentIndex+1); openArticleById(articles[next].id); }
     function openPrev(){ if(currentIndex===null) return; const prev = Math.max(0,currentIndex-1); openArticleById(articles[prev].id); }
@@ -427,8 +429,7 @@ function handleHash() {
   const id = parseInt(hash);
   if (!isNaN(id) && id >= 1 && id <= articles.length) {
     openArticleById(id);
-  // Добавляем кнопку копирования ссылки
-  addCopyLinkButton();
+ 
   }
 }
 
