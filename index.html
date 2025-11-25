@@ -297,37 +297,33 @@
       countTotal.textContent = articles.length;
       countViewed.textContent = viewed.length;
     }
-// --- Copy link button ---
 function addCopyLinkButton() {
-  const controlsRow = document.querySelector('.controls-row');
+  let controlsRow = document.querySelector('.controls-row');
   if (!controlsRow) return;
   
-  // Удаляем старую кнопку если есть
   const oldBtn = document.getElementById('copyLinkBtn');
   if (oldBtn) oldBtn.remove();
   
   const copyBtn = document.createElement('div');
   copyBtn.id = 'copyLinkBtn';
   copyBtn.className = 'btn';
-  copyBtn.innerHTML = '📋';
+  copyBtn.textContent = currentLang === 'ru' ? '📋 Ссылка' : '📋 Link';
   copyBtn.title = currentLang === 'ru' ? 'Скопировать ссылку' : 'Copy link';
   copyBtn.style.cursor = 'pointer';
-  copyBtn.style.marginLeft = 'auto';
+  copyBtn.style.marginLeft = '10px';
   
-  copyBtn.onclick = () => {
+  copyBtn.onclick = function() {
     if (currentIndex === null) return;
-    
     const articleId = articles[currentIndex].id;
-    const link = window.location.origin + window.location.pathname + '#' + articleId;
-    
-    navigator.clipboard.writeText(link)
-      .then(() => {
-        const originalText = copyBtn.innerHTML;
-        copyBtn.innerHTML = currentLang === 'ru' ? '✓ Скопировано!' : '✓ Copied!';
-        setTimeout(() => {
-          copyBtn.innerHTML = originalText;
-        }, 2000);
-      })
+    const link = window.location.href.split('#')[0] + '#' + articleId;
+    navigator.clipboard.writeText(link).then(() => {
+      const msg = currentLang === 'ru' ? 'Ссылка скопирована!' : 'Link copied!';
+      alert(msg);
+    });
+  };
+  
+  controlsRow.appendChild(copyBtn);
+}
       .catch(() => {
         // Fallback для старых браузеров
         const tempInput = document.createElement('input');
