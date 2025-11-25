@@ -297,7 +297,56 @@
       countTotal.textContent = articles.length;
       countViewed.textContent = viewed.length;
     }
-
+// --- Copy link button ---
+function addCopyLinkButton() {
+  const controlsRow = document.querySelector('.controls-row');
+  if (!controlsRow) return;
+  
+  // Удаляем старую кнопку если есть
+  const oldBtn = document.getElementById('copyLinkBtn');
+  if (oldBtn) oldBtn.remove();
+  
+  const copyBtn = document.createElement('div');
+  copyBtn.id = 'copyLinkBtn';
+  copyBtn.className = 'btn';
+  copyBtn.innerHTML = '📋';
+  copyBtn.title = currentLang === 'ru' ? 'Скопировать ссылку' : 'Copy link';
+  copyBtn.style.cursor = 'pointer';
+  copyBtn.style.marginLeft = 'auto';
+  
+  copyBtn.onclick = () => {
+    if (currentIndex === null) return;
+    
+    const articleId = articles[currentIndex].id;
+    const link = window.location.origin + window.location.pathname + '#' + articleId;
+    
+    navigator.clipboard.writeText(link)
+      .then(() => {
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = currentLang === 'ru' ? '✓ Скопировано!' : '✓ Copied!';
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+        }, 2000);
+      })
+      .catch(() => {
+        // Fallback для старых браузеров
+        const tempInput = document.createElement('input');
+        tempInput.value = link;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = currentLang === 'ru' ? '✓ Скопировано!' : '✓ Copied!';
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+        }, 2000);
+      });
+  };
+  
+  controlsRow.appendChild(copyBtn);
+}
     // --- Open article ---
 function openArticleById(id){
   const idx = articles.findIndex(x=>x.id===id);
@@ -378,6 +427,8 @@ function handleHash() {
   const id = parseInt(hash);
   if (!isNaN(id) && id >= 1 && id <= articles.length) {
     openArticleById(id);
+  // Добавляем кнопку копирования ссылки
+  addCopyLinkButton();
   }
 }
 
