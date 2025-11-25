@@ -409,10 +409,47 @@ function openArticleById(id){
       else { document.documentElement.style.setProperty('--neon','#39ff14'); document.documentElement.style.setProperty('--neon-2','#6bff6b'); }
     }
 
-    // language toggle
-    function setLang(lang){ currentLang = lang==='en' ? 'en' : 'ru'; langToggle.textContent = currentLang.toUpperCase(); viewMode.textContent = currentLang==='ru'? 'Режим просмотра' : 'View mode'; saveState(); renderList(); renderHistory(); renderFavs(); if(currentIndex!==null) openArticleById(articles[currentIndex].id); }
-    function toggleLang(){ setLang(currentLang==='ru' ? 'en' : 'ru'); }
-    langToggle.onclick = ()=> toggleLang();
+   function setLang(lang){ 
+  currentLang = lang==='en' ? 'en' : 'ru'; 
+  langToggle.textContent = currentLang.toUpperCase(); 
+  viewMode.textContent = currentLang==='ru'? 'Режим просмотра' : 'View mode';
+  
+  // Обновляем текст кнопок
+  document.getElementById('randomBtn').title = currentLang==='ru'? 'Случайная статья' : 'Random article';
+  document.getElementById('gotoBtn').textContent = currentLang==='ru'? 'Открыть' : 'Open';
+  document.getElementById('gotoNumber').placeholder = currentLang==='ru'? '№ статьи' : 'Article #';
+  document.getElementById('prevBtn').textContent = currentLang==='ru'? '◀ Пред.' : '◀ Prev';
+  document.getElementById('nextBtn').textContent = currentLang==='ru'? 'След. ▶' : 'Next ▶';
+  document.getElementById('openFavsBtn').textContent = currentLang==='ru'? '⭐ Избранные' : '⭐ Favorites';
+  document.getElementById('firstBtn').textContent = currentLang==='ru'? 'Первая' : 'First';
+  document.getElementById('lastBtn').textContent = currentLang==='ru'? 'Последняя' : 'Last';
+  document.getElementById('themeToggle').textContent = currentLang==='ru'? 'Тема' : 'Theme';
+  
+  // Обновляем подсказки
+  const hintText = currentLang==='ru'? 'Подсказки: ←/→ — навигация, R — случайная.' : 'Tips: ←/→ — navigation, R — random.';
+  document.querySelector('.sidebar > div:last-child').textContent = hintText;
+  
+  // Обновляем кнопку копирования если она есть
+  const copyBtn = document.getElementById('copyLinkBtn');
+  if (copyBtn) {
+    copyBtn.title = currentLang==='ru'? 'Скопировать ссылку' : 'Copy link';
+    copyBtn.textContent = currentLang==='ru'? '📋 Ссылка' : '📋 Link';
+  }
+  
+  // Обновляем заголовки в правой панели
+  document.querySelectorAll('.right .small').forEach(el => {
+    if (el.textContent === 'Последние просмотры') el.textContent = currentLang==='ru'? 'Последние просмотры' : 'Recent views';
+    if (el.textContent === 'Избранное') el.textContent = currentLang==='ru'? 'Избранное' : 'Favorites';
+    if (el.textContent === 'Быстрая навигация') el.textContent = currentLang==='ru'? 'Быстрая навигация' : 'Quick navigation';
+  });
+  
+  saveState(); 
+  renderList(); 
+  renderHistory(); 
+  renderFavs(); 
+  if(currentIndex!==null) openArticleById(articles[currentIndex].id);
+  addCopyLinkButton();
+}
 
     // --- Init ---
     function init(){ renderCategories(); renderList(); renderHistory(); renderFavs(); updateCounts(); setLang(currentLang); if(articles.length) openArticleById(articles[0].id); }
