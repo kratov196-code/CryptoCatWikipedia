@@ -372,7 +372,20 @@ function openArticleById(id){
       - To add a new article offline: add an object to the `articles` array. Include `title:{ru:'...', en:'...'}` and `body:{ru:`...`, en:`...`}` so both languages are available.
       - Search matches current language content. Hotkey L toggles language. Language is saved in localStorage.
     */
+// --- URL hash handling ---
+function handleHash() {
+  const hash = window.location.hash.substring(1); // убираем #
+  const id = parseInt(hash);
+  if (!isNaN(id) && id >= 1 && id <= articles.length) {
+    openArticleById(id);
+  }
+}
 
+// Обработчик изменения хэша
+window.addEventListener('hashchange', handleHash);
+
+// Проверить хэш при загрузке
+window.addEventListener('load', handleHash);
   </script>
 </body>
 </html>
