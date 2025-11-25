@@ -372,6 +372,44 @@ function openArticleById(id){
       - To add a new article offline: add an object to the `articles` array. Include `title:{ru:'...', en:'...'}` and `body:{ru:`...`, en:`...`}` so both languages are available.
       - Search matches current language content. Hotkey L toggles language. Language is saved in localStorage.
     */
+    <script>
+// Автоматическое перенаправление при загрузке
+window.addEventListener('DOMContentLoaded', function() {
+    const hash = window.location.hash.substring(1); // Получаем #11, #32 и т.д.
+    
+    if (hash) {
+        // Просто добавляем 'id' перед числом
+        const articleId = 'id' + hash;
+        
+        // Скрыть все статьи
+        document.querySelectorAll('.article').forEach(article => {
+            article.classList.remove('active');
+        });
+        
+        // Показать нужную статью
+        const targetArticle = document.getElementById(articleId);
+        if (targetArticle) {
+            targetArticle.classList.add('active');
+        } else {
+            // Если статьи нет - показываем главную
+            document.getElementById('home').classList.add('active');
+        }
+    }
+});
+
+// Функция для показа статьи (для обычной навигации)
+function showArticle(articleId) {
+    document.querySelectorAll('.article').forEach(article => {
+        article.classList.remove('active');
+    });
+    
+    const targetArticle = document.getElementById(articleId);
+    if (targetArticle) {
+        targetArticle.classList.add('active');
+    }
+    
+    history.pushState(null, null, `#${articleId}`);
+}
   </script>
 </body>
 </html>
